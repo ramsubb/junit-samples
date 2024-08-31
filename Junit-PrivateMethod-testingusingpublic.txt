@@ -1,0 +1,30 @@
+ @Mock
+    private RestTemplate restTemplate;
+
+    @Mock
+    private CacheManager cacheManager;
+
+    @Test
+    public void testPublicMethod() throws Exception {
+        // Prepare the mock behavior for RestTemplate
+        String expectedResponse = "Mocked Response";
+        Mockito.when(restTemplate.getForObject(Mockito.anyString(), Mockito.eq(String.class)))
+               .thenReturn(expectedResponse);
+
+        // Spy the service to mock the private method
+        MyService spyService = Mockito.spy(myService);
+        
+        // Optionally, you can mock the private method directly if needed
+        // Mockito.doReturn(expectedResponse).when(spyService).privateMethod(Mockito.anyString());
+
+        // Call the public method
+        String actualResponse = spyService.publicMethod("someInput");
+
+        // Assert the expected response
+        assertEquals(expectedResponse, actualResponse);
+
+        // Verify interactions
+        Mockito.verify(restTemplate).getForObject(Mockito.anyString(), Mockito.eq(String.class));
+        Mockito.verify(cacheManager, Mockito.times(1)).someCacheManagerMethod(); // Example
+    }
+}
